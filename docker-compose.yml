@@ -1,0 +1,26 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.7-alpine
+    container_name: man_dev_rabbitmq
+    ports:
+      - "5672:5672"   # RabbitMQ message broker port
+      - "15672:15672" # RabbitMQ management UI
+
+  flask_app:
+    build:
+      context: .
+    container_name: flask_app
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+    depends_on:
+      - rabbitmq
+
+  celery_worker:
+    build:
+      context: .
+    container_name: celery_worker
+    command: celery -A tasks worker --loglevel=info
+    depends_on:
+      - rabbitmq

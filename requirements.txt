@@ -1,0 +1,4 @@
+flask
+kombu
+importlib-metadata<5.0
+celery

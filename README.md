@@ -1,10 +1,10 @@
 ```bash
-docker pull quay.io/arubadevops/rabbitmq-base-jenkins:rabbitmq-3.12.3-management
-docker stop rabbitmq_celery
-docker rm rabbitmq_celery
-docker run -d --name rabbitmq_celery --platform linux/amd64 -p 5672:5672 -p 15672:15672 -v rabbitmq_data:/var/lib/rabbitmq quay.io/arubadevops/rabbitmq-base-jenkins:rabbitmq-3.12.3-management
-docker start rabbitmq_celery
-pip install -r requirements.txt
+docker-compose -f docker-compose.yml up -d rabbitmq flask_app
+```
+```bash
+virtualenv -p python3.8 ENV
+source ENV/bin/activate
+./ENV/bin/pip install -r requirements.txt
 ```
 
 
@@ -24,8 +24,8 @@ Or, if you don't want/need a background service you can just run:
 
 
 ```bash
-celery -A tasks worker --loglevel=info
-celery -A tasks beat --loglevel=info
+celery -A my_celery.celery_tasks worker --loglevel=info
+celery -A my_celery.celery_tasks beat --loglevel=info
 
-python app.py
+python my_celery.celery_app.py
 ```
